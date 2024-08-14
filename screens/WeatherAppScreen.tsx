@@ -2,35 +2,20 @@
 import React from 'react';
 import { View, Text, Button, StyleSheet } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import { DrawerNavigationProp } from '@react-navigation/drawer';
+import { createDrawerNavigator, DrawerNavigationProp } from '@react-navigation/drawer';
+import ForecastScreen from './ForecastScreen';
+import CurrentWeatherScreen from './CurrentWeatherScreen';
 
-type WeatherAppScreenNavigationProp = DrawerNavigationProp<{}>
+
+const WeatherDrawer = createDrawerNavigator();
 
 const WeatherAppScreen = () => {
-    const navigation = useNavigation<WeatherAppScreenNavigationProp>();
-
     return (
-        <View style={styles.container}>
-            <Text style={styles.title}>Weather App</Text>
-            <Button
-                title="Open Left Drawer"
-                onPress={() => navigation.openDrawer()}
-            />
-        </View>
+        <WeatherDrawer.Navigator initialRouteName='CurrentWeather'>
+            <WeatherDrawer.Screen name='CurrentWeather' component={CurrentWeatherScreen} />
+            <WeatherDrawer.Screen name='Forecast' component={ForecastScreen} />
+        </WeatherDrawer.Navigator>
     );
 };
-
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        alignItems: 'center',
-        justifyContent: 'center',
-        padding: 20,
-    },
-    title: {
-        fontSize: 24,
-        marginBottom: 20,
-    },
-});
 
 export default WeatherAppScreen;

@@ -18,23 +18,7 @@ export type RootStackParamList = {
   WeatherApp: undefined;
 };
 
-const Stack = createStackNavigator<RootStackParamList>();
 const Drawer = createDrawerNavigator();
-const WeatherAppDrawer = createDrawerNavigator();
-
-function WeatherAppDrawerNavigator() {
-  return (
-    <WeatherAppDrawer.Navigator
-      initialRouteName="WeatherApp"
-      screenOptions={{
-        drawerPosition: 'left',
-        drawerType: 'slide',
-      }}
-    >
-      <WeatherAppDrawer.Screen name="WeatherApp" component={WeatherAppScreen} />
-    </WeatherAppDrawer.Navigator>
-  );
-}
 
 function MainDrawerNavigation() {
   return (
@@ -48,7 +32,7 @@ function MainDrawerNavigation() {
     >
       <Drawer.Screen name="Home" component={HomeScreen} />
       <Drawer.Screen name="PhotoGallery" component={PhotoGalleryScreen} />
-      <Drawer.Screen name="WeatherApp" component={WeatherAppDrawerNavigator} />
+      <Drawer.Screen name="WeatherApp" component={WeatherAppScreen} />
     </Drawer.Navigator>
   )
 }
