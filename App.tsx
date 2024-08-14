@@ -3,6 +3,7 @@ import 'react-native-gesture-handler';
 import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import HomeScreen from './screens/HomeScreen';
 import PhotoDetailScreen from './screens/PhotoDetailScreen';
 import PhotoModalScreen from './screens/PhotoModalScreen';
@@ -14,6 +15,7 @@ export type RootStackParamList = {
 };
 
 const Stack = createStackNavigator<RootStackParamList>();
+const Tab = createBottomTabNavigator();
 
 const App = () => {
   return (
