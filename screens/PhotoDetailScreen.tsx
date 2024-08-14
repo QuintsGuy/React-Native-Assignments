@@ -14,7 +14,15 @@ interface PhotoDetailScreenProps {
 }
 
 const PhotoDetailScreen: React.FC<PhotoDetailScreenProps> = ({ navigation, route }) => {
-  const { photo } = route.params;
+  const photo = route.params?.photo;
+
+  if (!photo) {
+    return (
+      <View style={styles.container}>
+        <Text>No Photo Available</Text>
+      </View>
+    )
+  }
 
   return (
     <View style={styles.container}>

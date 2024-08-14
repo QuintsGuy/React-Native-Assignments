@@ -3,32 +3,60 @@ import 'react-native-gesture-handler';
 import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import HomeScreen from './screens/HomeScreen';
+import { createDrawerNavigator } from '@react-navigation/drawer';
 import PhotoDetailScreen from './screens/PhotoDetailScreen';
 import PhotoModalScreen from './screens/PhotoModalScreen';
+import WeatherAppScreen from './screens/WeatherAppScreen';
+import HomeScreen from './screens/HomeScreen';
+import PhotoGalleryScreen from './screens/PhotoGalleryScreen';
 
 export type RootStackParamList = {
   Home: undefined;
+  PhotoGallery: undefined;
   PhotoDetail: { photo: { id: number; url: string } };
   PhotoModal: { photo: { id: number; url: string } };
+  WeatherApp: undefined;
 };
 
 const Stack = createStackNavigator<RootStackParamList>();
-const Tab = createBottomTabNavigator();
+const Drawer = createDrawerNavigator();
+const WeatherAppDrawer = createDrawerNavigator();
 
-const App = () => {
+function WeatherAppDrawerNavigator() {
+  return (
+    <WeatherAppDrawer.Navigator
+      initialRouteName="WeatherApp"
+      screenOptions={{
+        drawerPosition: 'left',
+        drawerType: 'slide',
+      }}
+    >
+      <WeatherAppDrawer.Screen name="WeatherApp" component={WeatherAppScreen} />
+    </WeatherAppDrawer.Navigator>
+  );
+}
+
+function MainDrawerNavigation() {
+  return (
+    <Drawer.Navigator
+      initialRouteName='Home'
+      screenOptions={{
+        drawerPosition: 'right',
+        drawerType: 'slide',
+        headerShown: false,
+      }}
+    >
+      <Drawer.Screen name="Home" component={HomeScreen} />
+      <Drawer.Screen name="PhotoGallery" component={PhotoGalleryScreen} />
+      <Drawer.Screen name="WeatherApp" component={WeatherAppDrawerNavigator} />
+    </Drawer.Navigator>
+  )
+}
+
+function App() {
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="Home">
-        <Stack.Screen name="Home" component={HomeScreen} />
-        <Stack.Screen name="PhotoDetail" component={PhotoDetailScreen} />
-        <Stack.Screen
-          name="PhotoModal"
-          component={PhotoModalScreen}
-          options={{ presentation: 'modal', headerShown: false }}
-        />
-      </Stack.Navigator>
+      <MainDrawerNavigation />
     </NavigationContainer>
   );
 };

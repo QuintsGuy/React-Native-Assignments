@@ -1,81 +1,44 @@
-// screens/HomeScreen.tsx
-import React, { useState, useEffect } from 'react';
-import { View, TextInput, FlatList, TouchableOpacity, Image, StyleSheet } from 'react-native';
-import { StackNavigationProp } from '@react-navigation/stack';
+// HomeScreen.tsx
+import React from 'react';
+import { View, Text, Button, StyleSheet } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
+import type { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from '../App';
-
-interface Photo {
-  id: number;
-  url: string;
-}
 
 type HomeScreenNavigationProp = StackNavigationProp<RootStackParamList, 'Home'>;
 
-interface HomeScreenProps {
-  navigation: HomeScreenNavigationProp;
-}
+const HomeScreen = () => {
+    const navigation = useNavigation<HomeScreenNavigationProp>();
 
-const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
-  const [searchTerm, setSearchTerm] = useState<string>('');
-  const [photos, setPhotos] = useState<Photo[]>([]);
-
-  useEffect(() => {
-    const fetchPhotos = () => {
-      const images: Photo[] = [];
-      for (let i = 1; i < 70; i++) {
-        images.push({ id: i, url: `https://picsum.photos/id/${i}/200` });
-      }
-      setPhotos(images);
-    };
-
-    fetchPhotos();
-  }, []);
-
-  const filteredPhotos = photos.filter(photo => photo.id.toString().includes(searchTerm));
-
-  const handlePhotoPress = (photo: Photo) => {
-    navigation.navigate('PhotoDetail', { photo });
-  };
-
-  return (
-    <View style={styles.container}>
-      <TextInput
-        style={styles.searchBar}
-        placeholder="Search photos by ID"
-        value={searchTerm}
-        onChangeText={setSearchTerm}
-      />
-      <FlatList
-        data={filteredPhotos}
-        numColumns={3}
-        keyExtractor={item => item.id.toString()}
-        renderItem={({ item }) => (
-          <TouchableOpacity onPress={() => handlePhotoPress(item)}>
-            <Image source={{ uri: item.url }} style={styles.photo} />
-          </TouchableOpacity>
-        )}
-      />
-    </View>
-  );
+    return (
+        <View style={styles.container}>
+            <Text style={styles.title}>Welcome to the Home Screen</Text>
+            <Button
+                title="Go to Photo Gallery"
+                onPress={() => navigation.navigate('PhotoGallery')}
+            />
+            <Button
+                title="Go to Weather App"
+                onPress={() => navigation.navigate('WeatherApp')}
+            />
+        </View>
+    );
 };
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    padding: 10,
-  },
-  searchBar: {
-    height: 40,
-    borderColor: 'gray',
-    borderWidth: 1,
-    marginBottom: 10,
-    paddingHorizontal: 10,
-  },
-  photo: {
-    width: 100,
-    height: 100,
-    margin: 5,
-  },
+    container: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        padding: 16,
+    },
+    title: {
+        fontSize: 24,
+        marginBottom: 20,
+    },
+    button: {
+        marginTop: 20,
+    },
 });
 
 export default HomeScreen;
