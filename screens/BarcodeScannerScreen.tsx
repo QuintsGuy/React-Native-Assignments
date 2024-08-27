@@ -1,27 +1,53 @@
 import React, { useState, useEffect } from 'react';
 import { Text, View, StyleSheet, Button } from 'react-native';
 import { BarCodeEvent, BarCodeScanner } from 'expo-barcode-scanner';
+import { useFocusEffect, useNavigation } from '@react-navigation/native';
+import { createStackNavigator, StackNavigationProp } from '@react-navigation/stack';
+
+export type RootStackParamList = {
+    Scanner: undefined;
+    ProductDetail: { url: string };
+    Favorites: undefined;
+};
+
+interface Product {
+    id: number;
+    title: string;
+    description: string;
+    price: number;
+    category: string;
+    image: string;
+}
+
+type BarcodeScannerScreenNavigationProp = StackNavigationProp<RootStackParamList, 'Scanner'>;
 
 const BarcodeScannerScreen = () => {
     const [hasPermission, setHasPermission] = useState<boolean | null>(null);
     const [scanned, setScanned] = useState(false);
+    const navigation = useNavigation<BarcodeScannerScreenNavigationProp>();
 
     useEffect(() => {
-            const getBarCodeScannerPermissions = async () => {
-                const { status } = await BarCodeScanner.requestPermissionsAsync();
-                setHasPermission(status === 'granted');
-            };
+        const getBarCodeScannerPermissions = async () => {
+            const { status } = await BarCodeScanner.requestPermissionsAsync();
+            setHasPermission(status === 'granted');
+        };
 
         getBarCodeScannerPermissions();
     }, []);
+
+    useFocusEffect(
+        React.useCallback(() => {
+            setScanned(false);
+        }, [])
+    );
     
-    const handleBarCodeScanned = ({ type, data }: BarCodeEvent) => {
-        // Only allow QR codes
-        if (type === BarCodeScanner.Constants.BarCodeType.qr) {
-            setScanned(true);
-            alert(`QR code with data ${data} has been scanned!`);
-        } else {
-            alert('Only QR codes are allowed.');
+    const handleBarCodeScanned = ({ type, data }: { type: string, data: string }) => {
+        setScanned(true);
+        try {
+            const url = data.trim();
+            navigation.navigate('ProductDetail', { url });
+        } catch (error) {
+            console.error('Failed to handle QR code data:', error);
         }
     };
     

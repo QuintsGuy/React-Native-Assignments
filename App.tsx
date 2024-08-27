@@ -6,7 +6,8 @@ import { createDrawerNavigator } from '@react-navigation/drawer';
 import WeatherAppScreen from './screens/WeatherAppScreen';
 import HomeScreen from './screens/HomeScreen';
 import PhotoGalleryScreen from './screens/PhotoGalleryScreen';
-import BarcodeScannerScreen from './screens/BarcodeScannerScreen';
+import { createStackNavigator } from '@react-navigation/stack';
+import BarcodeAppScreen from './screens/BarcodeAppScreen';
 
 export type RootStackParamList = {
   Home: undefined;
@@ -18,6 +19,7 @@ export type RootStackParamList = {
 };
 
 const Drawer = createDrawerNavigator();
+const Stack = createStackNavigator();
 
 function MainDrawerNavigation() {
   return (
@@ -32,7 +34,7 @@ function MainDrawerNavigation() {
       <Drawer.Screen name="Home" component={HomeScreen} />
       <Drawer.Screen name="PhotoGallery" component={PhotoGalleryScreen} />
       <Drawer.Screen name="WeatherApp" component={WeatherAppScreen} />
-      <Drawer.Screen name="BarcodeScanner" component={BarcodeScannerScreen} />
+      <Drawer.Screen name="BarcodeScanner" component={BarcodeAppScreen} />
     </Drawer.Navigator>
   )
 }

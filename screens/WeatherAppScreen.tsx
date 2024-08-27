@@ -6,7 +6,6 @@ import { createDrawerNavigator, DrawerNavigationProp } from '@react-navigation/d
 import ForecastScreen from './ForecastScreen';
 import CurrentWeatherScreen from './CurrentWeatherScreen';
 
-
 const WeatherDrawer = createDrawerNavigator();
 
 const WeatherAppScreen = () => {
