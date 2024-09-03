@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { View, TextInput, FlatList, TouchableOpacity, Image, StyleSheet } from 'react-native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from '../App';
+import Animated, { useAnimatedScrollHandler, useAnimatedStyle, useSharedValue } from 'react-native-reanimated';
 
 interface Photo {
   id: number;
@@ -18,6 +19,8 @@ interface PhotoGalleryProps {
 const PhotoGalleryScreen: React.FC<PhotoGalleryProps> = ({ navigation }) => {
   const [searchTerm, setSearchTerm] = useState<string>('');
   const [photos, setPhotos] = useState<Photo[]>([]);
+  const marginVertical = useSharedValue(5);
+  const rotation = useSharedValue(0);
 
   useEffect(() => {
     const fetchPhotos = () => {
@@ -30,9 +33,26 @@ const PhotoGalleryScreen: React.FC<PhotoGalleryProps> = ({ navigation }) => {
 
     fetchPhotos();
   }, []);
-
+  
   const filteredPhotos = photos.filter(photo => photo.id.toString().includes(searchTerm));
 
+  const scrollHandler = useAnimatedScrollHandler({
+    onScroll: event => {
+      const newMargin = 5 + event.contentOffset.y / 30;
+      const newRotation = event.contentOffset.y / 10;
+      
+      marginVertical.value = Math.min(Math.max(newMargin, 5), 20);
+      rotation.value = newRotation % 360; // Rotate images within 360 degrees
+    },
+  });
+  
+  const animatedStyle = useAnimatedStyle(() => {
+    return {
+      marginVertical: marginVertical.value,
+      transform: [{ rotate: `${rotation.value}deg` }],
+    };
+  });
+  
   const handlePhotoPress = (photo: Photo) => {
     navigation.navigate('PhotoDetail', { photo });
   };
@@ -45,15 +65,21 @@ const PhotoGalleryScreen: React.FC<PhotoGalleryProps> = ({ navigation }) => {
         value={searchTerm}
         onChangeText={setSearchTerm}
       />
-      <FlatList
+      <Animated.FlatList
+        contentContainerStyle={{ alignItems: 'center', paddingTop: 20 }}
         data={filteredPhotos}
         numColumns={3}
         keyExtractor={item => item.id.toString()}
         renderItem={({ item }) => (
-          <TouchableOpacity onPress={() => handlePhotoPress(item)}>
-            <Image source={{ uri: item.url }} style={styles.photo} />
+          <TouchableOpacity activeOpacity={0.9} onPress={() => handlePhotoPress(item)}>
+            <Animated.Image 
+              sharedTransitionTag={`tag-${item.url}`} 
+              source={{ uri: item.url }} 
+              style={[styles.photo, animatedStyle]} 
+            />
           </TouchableOpacity>
         )}
+        onScroll={scrollHandler}
       />
     </View>
   );
