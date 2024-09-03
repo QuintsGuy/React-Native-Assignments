@@ -8,6 +8,7 @@ import HomeScreen from './screens/HomeScreen';
 import PhotoGalleryScreen from './screens/PhotoGalleryScreen';
 import { createStackNavigator } from '@react-navigation/stack';
 import BarcodeAppScreen from './screens/BarcodeAppScreen';
+import PhoneStatusScreen from './screens/PhoneStatusScreen';
 
 export type RootStackParamList = {
   Home: undefined;
@@ -35,6 +36,7 @@ function MainDrawerNavigation() {
       <Drawer.Screen name="PhotoGallery" component={PhotoGalleryScreen} />
       <Drawer.Screen name="WeatherApp" component={WeatherAppScreen} />
       <Drawer.Screen name="BarcodeScanner" component={BarcodeAppScreen} />
+      <Drawer.Screen name="PhoneStatus" component={PhoneStatusScreen} />
     </Drawer.Navigator>
   )
 }
